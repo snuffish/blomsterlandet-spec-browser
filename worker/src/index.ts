@@ -15,12 +15,20 @@ import { extractLiveStock } from '../../shared/stock';
 const ALLOWED_ORIGIN = 'https://www.blomsterlandet.se';
 const ALLOWED_PATH = '/produkter/';
 
-/** Callers allowed to read the response. Never '*' — this Worker exists for one site. */
-const ALLOWED_CALLERS = new Set([
-  'https://snuffish.github.io',
-  'http://localhost:5173',
-  'http://localhost:4321',
-]);
+/** The deployed site. Never '*' — this Worker exists for one caller in production. */
+const SITE_ORIGIN = 'https://snuffish.github.io';
+
+/**
+ * Any loopback port is also accepted, because Vite hops to the next free port (5174, 5175…)
+ * whenever 5173 is taken and pinning an exact dev port breaks the moment two servers run.
+ * Widening this costs nothing: the Worker exposes only public product pages, holds no
+ * credentials and mutates nothing, and a page can only claim a loopback origin if it is
+ * genuinely served from the developer's own machine.
+ */
+const LOOPBACK = /^http:\/\/(localhost|127\.0\.0\.1):\d+$/;
+
+export const isAllowedCaller = (origin: string): boolean =>
+  origin === SITE_ORIGIN || LOOPBACK.test(origin);
 
 /** Matches harvest/http.ts — identifies the caller rather than impersonating a browser. */
 const USER_AGENT =
@@ -29,7 +37,9 @@ const USER_AGENT =
 const UPSTREAM_TIMEOUT_MS = 15_000;
 
 function corsHeaders(origin: string | null): Record<string, string> {
-  const allowed = origin && ALLOWED_CALLERS.has(origin) ? origin : [...ALLOWED_CALLERS][0]!;
+  // An unrecognised origin gets the production origin back: it won't match, so the browser
+  // blocks the read — which is the intended answer, not an error.
+  const allowed = origin && isAllowedCaller(origin) ? origin : SITE_ORIGIN;
   return {
     'access-control-allow-origin': allowed,
     'access-control-allow-methods': 'GET, OPTIONS',
