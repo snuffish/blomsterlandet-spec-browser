@@ -47,13 +47,24 @@ function corsHeaders(origin: string | null): Record<string, string> {
   };
 }
 
-function json(body: unknown, status: number, origin: string | null): Response {
+interface ExecutionContext {
+  waitUntil(promise: Promise<unknown>): void;
+}
+
+const CACHE_TTL_SECONDS = 900; // 15 minutes
+const STALE_WHILE_REVALIDATE_SECONDS = 300; // 5 minutes
+
+function json(
+  body: unknown,
+  status: number,
+  origin: string | null,
+  cacheControl = 'no-store',
+): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
       'content-type': 'application/json; charset=utf-8',
-      // The entire point of this feature is liveness; nothing here may be cached.
-      'cache-control': 'no-store',
+      'cache-control': cacheControl,
       ...corsHeaders(origin),
     },
   });
@@ -74,7 +85,7 @@ function validateTarget(raw: string | null): URL | null {
 }
 
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(request: Request, _env?: unknown, ctx?: ExecutionContext): Promise<Response> {
     const origin = request.headers.get('Origin');
 
     if (request.method === 'OPTIONS') {
@@ -91,6 +102,29 @@ export default {
         400,
         origin,
       );
+    }
+
+    // Cloudflare Edge Cache: check if the parsed stock is already cached.
+    const cacheKey = new Request(target.toString(), { method: 'GET' });
+    const cache =
+      typeof caches !== 'undefined' && 'default' in caches ? (caches as unknown as { default: Cache }).default : null;
+
+    if (cache) {
+      try {
+        const cached = await cache.match(cacheKey);
+        if (cached) {
+          const headers = new Headers(cached.headers);
+          for (const [k, v] of Object.entries(corsHeaders(origin))) {
+            headers.set(k, v);
+          }
+          return new Response(cached.body, {
+            status: cached.status,
+            headers,
+          });
+        }
+      } catch {
+        // Fall through on cache error to avoid failing the request.
+      }
     }
 
     let upstream: Response;
@@ -113,9 +147,19 @@ export default {
 
     try {
       const stock = extractLiveStock(await upstream.text());
-      // A page with no inventory block is a real, non-error case: 200 with an explicit null
-      // so the UI can say "saknas" rather than showing a failure.
-      return json({ stock }, 200, origin);
+      const cacheControl = `public, max-age=${CACHE_TTL_SECONDS}, stale-while-revalidate=${STALE_WHILE_REVALIDATE_SECONDS}`;
+      const response = json({ stock }, 200, origin, cacheControl);
+
+      if (cache) {
+        const toCache = response.clone();
+        if (ctx && typeof ctx.waitUntil === 'function') {
+          ctx.waitUntil(cache.put(cacheKey, toCache));
+        } else {
+          cache.put(cacheKey, toCache).catch(() => {});
+        }
+      }
+
+      return response;
     } catch (error) {
       return json({ error: `Kunde inte tolka produktsidan: ${(error as Error).message}` }, 502, origin);
     }

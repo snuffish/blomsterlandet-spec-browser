@@ -2,9 +2,9 @@
  * @vitest-environment jsdom
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { StockPanel } from './StockPanel';
-import { mockStock, stockJson } from '~/test-setup';
+import { mockStock, renderWithQuery, stockJson } from '~/test-setup';
 import type { LiveStock } from '~shared/types';
 
 const BRIDGE = 'https://stock-bridge.test/';
@@ -30,7 +30,7 @@ afterEach(() => vi.unstubAllEnvs());
 describe('StockPanel', () => {
   it('renders online status and the store breakdown once loaded', async () => {
     mockStock(stockJson({ stock: stock() }));
-    const { container } = render(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
+    const { container } = renderWithQuery(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
 
     // "I lager" appears both as the online status and as a store label, so scope the
     // online assertion to its own row rather than searching the whole panel.
@@ -45,7 +45,7 @@ describe('StockPanel', () => {
   /** A 61-row list is unreadable when most rows say the product isn't there. */
   it('lists only stores that hold the product, and counts only those', async () => {
     mockStock(stockJson({ stock: stock() }));
-    render(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
+    renderWithQuery(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
 
     expect(await screen.findByText('Arninge')).toBeTruthy();   // inStock
     expect(screen.getByText('Skövde')).toBeTruthy();           // limitedStock counts as stock
@@ -56,7 +56,7 @@ describe('StockPanel', () => {
 
   it('drops a region entirely when none of its stores hold the product', async () => {
     mockStock(stockJson({ stock: stock() }));
-    render(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
+    renderWithQuery(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
 
     await screen.findByText('Arninge');
     expect(screen.getByText('Stockholm')).toBeTruthy();  // still has Arninge
@@ -73,7 +73,7 @@ describe('StockPanel', () => {
         }),
       }),
     );
-    render(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
+    renderWithQuery(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
 
     expect(await screen.findByText(/Ingen butik har den i lager/)).toBeTruthy();
     expect(screen.queryByText('Ingenstans')).toBeNull();
@@ -81,7 +81,7 @@ describe('StockPanel', () => {
 
   it('groups stores by region', async () => {
     mockStock(stockJson({ stock: stock() }));
-    render(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
+    renderWithQuery(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
 
     await screen.findByText('Arninge');
     expect(screen.getByText('Stockholm')).toBeTruthy();
@@ -90,7 +90,7 @@ describe('StockPanel', () => {
 
   it('shows a pending state while the request is in flight', () => {
     mockStock(stockJson({ stock: stock() }));
-    render(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
+    renderWithQuery(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
 
     expect(screen.getByText(/Hämtar lagerstatus/)).toBeTruthy();
   });
@@ -98,14 +98,14 @@ describe('StockPanel', () => {
   /** Upstream genuinely has no inventory block for some products — distinct from a failure. */
   it('says status is missing when the bridge returns no stock', async () => {
     mockStock(stockJson({ stock: null }));
-    render(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
+    renderWithQuery(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
 
     expect(await screen.findByText(/Lagerstatus saknas/)).toBeTruthy();
   });
 
   it('renders an error when the bridge fails', async () => {
     mockStock(stockJson({ error: 'Butiken svarade 503.' }, 502));
-    render(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
+    renderWithQuery(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
 
     expect(await screen.findByText(/Kunde inte hämta lagerstatus/)).toBeTruthy();
   });
@@ -119,7 +119,7 @@ describe('StockPanel', () => {
         }),
       }),
     );
-    render(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
+    renderWithQuery(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
 
     expect(await screen.findByText('Nyköping')).toBeTruthy();
     expect(screen.getByText('Kommer snart')).toBeTruthy();
@@ -127,13 +127,13 @@ describe('StockPanel', () => {
 
   it('renders nothing at all when no bridge is configured', () => {
     vi.stubEnv('VITE_STOCK_API', '');
-    const { container } = render(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
+    const { container } = renderWithQuery(<StockPanel productUrl={URL_PATH} selectedStores={[]} />);
 
     expect(container.querySelector('.stock')).toBeNull();
   });
 
   it('does not fetch when no product is selected', async () => {
-    render(<StockPanel productUrl={null} selectedStores={[]} />);
+    renderWithQuery(<StockPanel productUrl={null} selectedStores={[]} />);
     // mockStock was never armed; a stray fetch would throw inside the stub.
     await waitFor(() => expect(screen.queryByText(/Kunde inte/)).toBeNull());
   });
@@ -141,7 +141,7 @@ describe('StockPanel', () => {
   describe('with stores the user follows', () => {
     it('shows only followed stores that are in stock and hides out of stock ones', async () => {
       mockStock(stockJson({ stock: stock() }));
-      render(<StockPanel productUrl={URL_PATH} selectedStores={['1', '4']} />);
+      renderWithQuery(<StockPanel productUrl={URL_PATH} selectedStores={['1', '4']} />);
 
       expect(await screen.findByText('Arninge')).toBeTruthy(); // inStock, shown
       expect(screen.queryByText('Partille')).toBeNull(); // outOfStock, hidden
@@ -153,7 +153,7 @@ describe('StockPanel', () => {
 
     it('says so when no followed store has the product in stock', async () => {
       mockStock(stockJson({ stock: stock() }));
-      render(<StockPanel productUrl={URL_PATH} selectedStores={['4']} />);
+      renderWithQuery(<StockPanel productUrl={URL_PATH} selectedStores={['4']} />);
 
       expect(await screen.findByText(/finns inte i lager i de butiker du valt/i)).toBeTruthy();
       expect(screen.queryByText('Butikslager')).toBeNull();

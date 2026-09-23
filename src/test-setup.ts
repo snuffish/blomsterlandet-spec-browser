@@ -1,8 +1,9 @@
+import { createElement, type ReactElement } from 'react';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, vi } from 'vitest';
-import { cleanup } from '@testing-library/react';
-
+import { cleanup, render, type RenderResult } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 /**
  * Serve the real harvested dataset to the app under test. Mounting against fixtures would
  * verify the wiring but not that the actual catalogue renders and filters correctly.
@@ -37,6 +38,25 @@ vi.stubGlobal('fetch', async (input: RequestInfo | URL) => {
   const body = readFileSync(join(DATA_DIR, path.replace(/^data\//, '')), 'utf8');
   return new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } });
 });
+
+export function createTestQueryClient(): QueryClient {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        staleTime: 0,
+        gcTime: 0,
+      },
+    },
+  });
+}
+
+export function renderWithQuery(
+  ui: ReactElement,
+  client = createTestQueryClient(),
+): RenderResult {
+  return render(createElement(QueryClientProvider, { client }, ui));
+}
 
 afterEach(() => {
   stockResponse = null;

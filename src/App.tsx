@@ -1,4 +1,5 @@
 import { useDeferredValue, useMemo, useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { Product } from '~shared/types';
 import { ChainPanel } from '~/components/ChainPanel';
 import { FilterPanel, PRIMARY_DIM } from '~/components/FilterPanel';
@@ -13,7 +14,7 @@ import { formatDate } from '~/lib/format';
 
 const PAGE_SIZE = 60;
 
-export default function App() {
+function CatalogBrowser() {
   const { state: dataset, reload } = useDataset();
   const chain = useChain();
   const storePrefs = useStorePrefs();
@@ -105,8 +106,12 @@ export default function App() {
             <div className="grid">
               {shown.map((product) => (
                 <ProductCard
-                  key={product.id} product={product} heightSpec={PRIMARY_DIM}
+                  key={product.id}
+                  product={product}
+                  heightSpec={PRIMARY_DIM}
                   onOpen={setSelected}
+                  selectedStores={storePrefs.selected}
+                  stores={dataset.data.stores}
                 />
               ))}
             </div>
@@ -133,5 +138,26 @@ export default function App() {
           selectedStores={storePrefs.selected}
         />}
     </div>
+  );
+}
+
+export default function App() {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 1000 * 60 * 15,
+            gcTime: 1000 * 60 * 30,
+            refetchOnWindowFocus: false,
+          },
+        },
+      }),
+  );
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <CatalogBrowser />
+    </QueryClientProvider>
   );
 }

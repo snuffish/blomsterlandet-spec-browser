@@ -16,14 +16,18 @@ export const stockEnabled = (): boolean => stockApi() !== '';
 export class NoStockError extends Error {}
 
 /**
- * Read one product's stock, live. Never cached: the Worker sends `no-store` and this adds
- * `cache: 'no-store'` so an intermediary cannot serve a stale answer either.
+ * Read one product's stock. Uses the Cloudflare Worker bridge, which edge-caches stock
+ * responses for 15 minutes to prevent rate limiting upstream.
  */
-export async function fetchStock(productUrl: string, signal: AbortSignal): Promise<LiveStock> {
+export async function fetchStock(
+  productUrl: string,
+  signal?: AbortSignal,
+  cacheMode: RequestCache = 'default',
+): Promise<LiveStock> {
   const target = productUrl.startsWith('http') ? productUrl : SITE + productUrl;
   const response = await fetch(`${stockApi()}?url=${encodeURIComponent(target)}`, {
     signal,
-    cache: 'no-store',
+    cache: cacheMode,
   });
 
   const body = (await response.json()) as { stock?: LiveStock | null; error?: string };
