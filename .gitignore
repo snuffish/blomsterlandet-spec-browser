@@ -1,0 +1,8 @@
+node_modules/
+dist/
+harvest/cache/
+public/data/
+*.local
+.DS_Store
+
+*.tsbuildinfo
