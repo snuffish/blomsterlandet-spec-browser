@@ -100,6 +100,11 @@ export function FilterPanel({
           onToggle={toggleCampaign}
         />
 
+        <StoreFilter
+          stores={stores} selected={selectedStores}
+          onToggle={onToggleStore} onClear={onClearStores}
+        />
+
         {dimNames.map((name) => {
           const dim = facets.dims[name];
           if (!dim) return null;
@@ -119,11 +124,6 @@ export function FilterPanel({
             onToggle={(value) => toggleTag(name, value)}
           />
         ))}
-
-        <StoreFilter
-          stores={stores} selected={selectedStores}
-          onToggle={onToggleStore} onClear={onClearStores}
-        />
       </div>
     </aside>
   );
