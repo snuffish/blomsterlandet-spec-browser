@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FilterSection } from './FilterSection';
 
 interface Props {
   label: string;
@@ -21,8 +22,11 @@ export function ChipFilter({ label, values, selected, onToggle }: Props) {
         .slice(0, COLLAPSED);
 
   return (
-    <fieldset className="chip-filter">
-      <legend>{label}</legend>
+    <FilterSection
+      label={label}
+      className="chip-filter"
+      activeCount={selected.length}
+    >
       <div className="chips">
         {visible.map(({ value, count, label: text }) => {
           const isOn = selected.includes(value);
@@ -46,6 +50,6 @@ export function ChipFilter({ label, values, selected, onToggle }: Props) {
           {expanded ? 'Visa färre' : `Visa alla ${values.length}`}
         </button>
       )}
-    </fieldset>
+    </FilterSection>
   );
 }

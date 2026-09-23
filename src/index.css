@@ -197,13 +197,137 @@ legend {
   padding: 0; font-size: 13px; font-weight: 650;
   display: flex; align-items: center; gap: 6px;
 }
-legend .clear {
+legend .clear, .filter-actions .clear {
   background: none; border: 0; padding: 0 2px;
   color: var(--muted); font-size: 11px; line-height: 1;
 }
-legend .clear:hover { color: var(--sale); }
+legend .clear:hover, .filter-actions .clear:hover { color: var(--sale); }
 
-.range-readout { font-size: 13px; color: var(--green); font-weight: 650; margin: 8px 0 10px; }
+/* Collapsible filter sections */
+fieldset.filter-section {
+  padding: 0;
+}
+.filter-legend {
+  width: 100%;
+  display: block;
+}
+.filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 0;
+  gap: 8px;
+}
+.filter-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  user-select: none;
+}
+.filter-toggle:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.filter-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.filter-title {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ink);
+  transition: color .12s;
+}
+.filter-toggle:hover .filter-title {
+  color: var(--green);
+}
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--green);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.filter-active-summary {
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.filter-chevron-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 0;
+  padding: 2px;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color .15s;
+}
+.filter-chevron-btn:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+.filter-header:hover .filter-chevron,
+.filter-toggle:hover ~ .filter-actions .filter-chevron {
+  color: var(--ink);
+}
+.filter-chevron {
+  transition: transform .22s cubic-bezier(0.2, 0, 0, 1), color .15s;
+}
+.filter-chevron.open {
+  transform: rotate(0deg);
+}
+.filter-chevron.collapsed {
+  transform: rotate(-90deg);
+}
+
+.filter-body {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows .22s cubic-bezier(0.2, 0, 0, 1);
+}
+.filter-section.is-collapsed .filter-body {
+  grid-template-rows: 0fr;
+}
+.filter-body-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.filter-section.is-open .filter-body-inner {
+  overflow: visible;
+  padding-bottom: 14px;
+}
+
+.range-readout { font-size: 13px; color: var(--green); font-weight: 650; margin: 2px 0 10px; }
 
 .dual-slider { position: relative; height: 22px; margin-bottom: 10px; }
 .dual-slider .track,
@@ -238,7 +362,7 @@ legend .clear:hover { color: var(--sale); }
   margin-top: 10px; font-size: 12px; color: var(--muted); cursor: pointer;
 }
 
-.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 8px; }
 .chip {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 5px 10px; border-radius: 999px;

@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from 'react';
 import type { BaseUnit } from '~shared/units';
 import { formatRange } from '~shared/units';
 import type { DimFilter, RangeMode } from '~/lib/query';
+import { FilterSection } from './FilterSection';
 
 interface Props {
   label: string;
@@ -51,18 +52,17 @@ export function RangeFilter({ label, min, max, unit, value, onChange }: Props) {
   const loPos = toSlider(active.lo, min, max);
   const hiPos = toSlider(active.hi, min, max);
 
-  return (
-    <fieldset className="range-filter">
-      <legend>
-        {label}
-        {value && (
-          <button type="button" className="clear" onClick={() => onChange(null)} aria-label={`Rensa ${label}`}>
-            ✕
-          </button>
-        )}
-      </legend>
+  const formattedRange = formatRange({ lo: active.lo, hi: active.hi }, unit);
 
-      <div className="range-readout">{formatRange({ lo: active.lo, hi: active.hi }, unit)}</div>
+  return (
+    <FilterSection
+      label={label}
+      className="range-filter"
+      activeSummary={value ? formattedRange : undefined}
+      onClear={value ? () => onChange(null) : undefined}
+      clearLabel={`Rensa ${label}`}
+    >
+      <div className="range-readout">{formattedRange}</div>
 
       <div className="dual-slider" style={{ '--lo': `${loPos / 10}%`, '--hi': `${hiPos / 10}%` } as React.CSSProperties}>
         <div className="track" />
@@ -105,6 +105,6 @@ export function RangeFilter({ label, min, max, unit, value, onChange }: Props) {
         />
         <span>Endast växter helt inom intervallet</span>
       </label>
-    </fieldset>
+    </FilterSection>
   );
 }
