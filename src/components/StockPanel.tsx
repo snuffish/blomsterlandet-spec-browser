@@ -1,0 +1,108 @@
+import type { InventoryStatus, StoreStock } from '~shared/types';
+import { KNOWN_STATUSES } from '~shared/stock';
+import { useStock } from '~/hooks/useStock';
+
+interface Props {
+  /** The product's path on blomsterlandet.se; `null` while nothing is selected. */
+  productUrl: string | null;
+}
+
+/**
+ * Dot colour per status. An unrecognised status from upstream falls through to `unknown`
+ * rather than being dropped — the label still renders verbatim, so a new value degrades
+ * to a neutral dot instead of disappearing.
+ */
+const dotClass = (status: InventoryStatus): string =>
+  KNOWN_STATUSES.has(status) ? `dot dot-${status}` : 'dot dot-unknown';
+
+/** Stores come back in upstream order; grouping by region makes 61 of them scannable. */
+function byRegion(stores: StoreStock[]): Array<[string, StoreStock[]]> {
+  const groups = new Map<string, StoreStock[]>();
+  for (const store of stores) {
+    const key = store.region || 'Övriga';
+    groups.set(key, [...(groups.get(key) ?? []), store]);
+  }
+  return [...groups].sort(([a], [b]) => a.localeCompare(b, 'sv'));
+}
+
+export function StockPanel({ productUrl }: Props) {
+  const state = useStock(productUrl);
+
+  // No bridge configured: the feature is simply absent, exactly as before it existed.
+  if (state.status === 'disabled') return null;
+
+  return (
+    <section className="stock">
+      <h3>Lagerstatus</h3>
+
+      {state.status === 'loading' && (
+        <p className="stock-pending" role="status">Hämtar lagerstatus…</p>
+      )}
+
+      {state.status === 'missing' && (
+        <p className="stock-pending">Lagerstatus saknas för den här produkten.</p>
+      )}
+
+      {state.status === 'error' && (
+        <p className="stock-error" role="alert">
+          Kunde inte hämta lagerstatus. {state.message}
+        </p>
+      )}
+
+      {state.status === 'ready' && (
+        <>
+          <p className="stock-online">
+            <span>{state.stock.onlineLabel || 'Online'}</span>
+            <span className={dotClass(state.stock.online)} aria-hidden="true" />
+            <strong>{labelFor(state.stock.online)}</strong>
+          </p>
+
+          {state.stock.stores.length > 0 && (
+            <details className="stock-stores">
+              <summary>
+                {state.stock.storesHeader || 'Butikslager'}{' '}
+                <span className="stock-count">({state.stock.stores.length})</span>
+              </summary>
+              {byRegion(state.stock.stores).map(([region, stores]) => (
+                <div key={region} className="stock-region">
+                  <h4>{region}</h4>
+                  <ul>
+                    {stores.map((store) => (
+                      <li key={store.id}>
+                        <a href={store.url} target="_blank" rel="noopener noreferrer">
+                          {store.name}
+                        </a>
+                        <span className={dotClass(store.status)} aria-hidden="true" />
+                        <span className="stock-label">{store.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </details>
+          )}
+
+          <p className="stock-stamp">
+            Hämtad {new Date(state.stock.fetchedAt).toLocaleTimeString('sv-SE')} — live, aldrig cachad.
+          </p>
+        </>
+      )}
+    </section>
+  );
+}
+
+/** Online status has no label of its own upstream; the four known values map to the site's wording. */
+function labelFor(status: InventoryStatus): string {
+  switch (status) {
+    case 'inStock':
+      return 'I lager';
+    case 'limitedStock':
+      return 'Fåtal i lager';
+    case 'outOfStock':
+      return 'Slut i lager';
+    case 'onlyOnline':
+      return 'Säljs endast online';
+    default:
+      return status;
+  }
+}

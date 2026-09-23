@@ -33,7 +33,11 @@ jobs:
       - run: npm test
 
       # tsc -b walks both project references, then vite build emits dist/.
+      # VITE_STOCK_API is inlined at BUILD time (see worker/README.md); when the repository
+      # variable is unset the live-stock feature is simply absent and the app behaves as before.
       - run: npm run build
+        env:
+          VITE_STOCK_API: ${{ vars.VITE_STOCK_API }}
 
       - uses: actions/configure-pages@v5
 

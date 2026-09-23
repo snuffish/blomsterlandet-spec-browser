@@ -1,4 +1,4 @@
-import { extractPreloadedState } from './extract-state';
+import { extractPreloadedState } from '~shared/extract-state';
 import { BASE_URL, fetchText } from './http';
 import type { UpstreamProduct } from './upstream';
 

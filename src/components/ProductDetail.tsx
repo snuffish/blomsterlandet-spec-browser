@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import type { Product } from '~shared/types';
 import { formatRange } from '~shared/units';
 import { formatPrice, thumbnail } from '~/lib/format';
+import { StockPanel } from '~/components/StockPanel';
 
 const SITE = 'https://www.blomsterlandet.se';
 
@@ -46,6 +47,8 @@ export function ProductDetail({ product, onClose }: Props) {
             </a>
           </div>
         </div>
+
+        <StockPanel productUrl={product.url} />
 
         {Object.keys(product.dims).length > 0 && (
           <section>

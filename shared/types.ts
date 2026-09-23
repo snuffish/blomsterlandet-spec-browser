@@ -66,3 +66,32 @@ export interface Dataset {
   facets: FacetCatalogue;
   meta: HarvestMeta;
 }
+
+/* ── Live stock ────────────────────────────────────────────────────────────────
+ * Deliberately NOT part of `Product`. The dataset above is a harvested snapshot;
+ * everything below is fetched live per request and must never be cached alongside
+ * it, so the two are kept structurally separate rather than merged.
+ */
+
+/** The four values observed across the live catalogue. */
+export type InventoryStatus = 'inStock' | 'limitedStock' | 'onlyOnline' | 'outOfStock';
+
+export interface StoreStock {
+  id: string;
+  name: string;
+  city: string;
+  region: string;
+  url: string;
+  status: InventoryStatus;
+  /** Upstream's own Swedish wording, rendered verbatim — never re-derived locally. */
+  label: string;
+}
+
+export interface LiveStock {
+  online: InventoryStatus;
+  onlineLabel: string;
+  storesHeader: string;
+  stores: StoreStock[];
+  /** When the Worker read it upstream. Proves the value is not a cached one. */
+  fetchedAt: string;
+}
