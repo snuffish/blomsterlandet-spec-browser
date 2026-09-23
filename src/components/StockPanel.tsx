@@ -1,4 +1,4 @@
-import type { InventoryStatus, StoreStock } from '~shared/types';
+import type { InventoryStatus, LiveStock, StoreStock } from '~shared/types';
 import { KNOWN_STATUSES } from '~shared/stock';
 import { useStock } from '~/hooks/useStock';
 
@@ -15,7 +15,16 @@ interface Props {
 const dotClass = (status: InventoryStatus): string =>
   KNOWN_STATUSES.has(status) ? `dot dot-${status}` : 'dot dot-unknown';
 
-/** Stores come back in upstream order; grouping by region makes 61 of them scannable. */
+/**
+ * "In stock" means the shelf: `limitedStock` ("Fåtal i lager") counts, while `onlyOnline`
+ * (stocked nowhere, sold from the web only) and `outOfStock` do not.
+ */
+const IN_STOCK: ReadonlySet<string> = new Set(['inStock', 'limitedStock']);
+
+const stocked = (stores: StoreStock[]): StoreStock[] =>
+  stores.filter((store) => IN_STOCK.has(store.status));
+
+/** Stores come back in upstream order; grouping by region makes them scannable. */
 function byRegion(stores: StoreStock[]): Array<[string, StoreStock[]]> {
   const groups = new Map<string, StoreStock[]>();
   for (const store of stores) {
@@ -49,45 +58,55 @@ export function StockPanel({ productUrl }: Props) {
         </p>
       )}
 
-      {state.status === 'ready' && (
-        <>
-          <p className="stock-online">
-            <span>{state.stock.onlineLabel || 'Online'}</span>
-            <span className={dotClass(state.stock.online)} aria-hidden="true" />
-            <strong>{labelFor(state.stock.online)}</strong>
-          </p>
+      {state.status === 'ready' && <StockReady stock={state.stock} />}
 
-          {state.stock.stores.length > 0 && (
-            <details className="stock-stores">
-              <summary>
-                {state.stock.storesHeader || 'Butikslager'}{' '}
-                <span className="stock-count">({state.stock.stores.length})</span>
-              </summary>
-              {byRegion(state.stock.stores).map(([region, stores]) => (
-                <div key={region} className="stock-region">
-                  <h4>{region}</h4>
-                  <ul>
-                    {stores.map((store) => (
-                      <li key={store.id}>
-                        <a href={store.url} target="_blank" rel="noopener noreferrer">
-                          {store.name}
-                        </a>
-                        <span className={dotClass(store.status)} aria-hidden="true" />
-                        <span className="stock-label">{store.label}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </details>
-          )}
-
-          <p className="stock-stamp">
-            Hämtad {new Date(state.stock.fetchedAt).toLocaleTimeString('sv-SE')} — live, aldrig cachad.
-          </p>
-        </>
-      )}
     </section>
+  );
+}
+
+function StockReady({ stock }: { stock: LiveStock }) {
+  // Only shelves that actually hold the product; everything else is noise on a 61-row list.
+  const available = stocked(stock.stores);
+
+  return (
+    <>
+      <p className="stock-online">
+        <span>{stock.onlineLabel || 'Online'}</span>
+        <span className={dotClass(stock.online)} aria-hidden="true" />
+        <strong>{labelFor(stock.online)}</strong>
+      </p>
+
+      {available.length === 0 ? (
+        <p className="stock-pending">Ingen butik har den i lager just nu.</p>
+      ) : (
+        <details className="stock-stores">
+          <summary>
+            {stock.storesHeader || 'Butikslager'}{' '}
+            <span className="stock-count">({available.length})</span>
+          </summary>
+          {byRegion(available).map(([region, stores]) => (
+            <div key={region} className="stock-region">
+              <h4>{region}</h4>
+              <ul>
+                {stores.map((store) => (
+                  <li key={store.id}>
+                    <a href={store.url} target="_blank" rel="noopener noreferrer">
+                      {store.name}
+                    </a>
+                    <span className={dotClass(store.status)} aria-hidden="true" />
+                    <span className="stock-label">{store.label}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </details>
+      )}
+
+      <p className="stock-stamp">
+        Hämtad {new Date(stock.fetchedAt).toLocaleTimeString('sv-SE')} — live, aldrig cachad.
+      </p>
+    </>
   );
 }
 

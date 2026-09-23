@@ -16,7 +16,9 @@ const stock = (overrides: Partial<LiveStock> = {}): LiveStock => ({
   storesHeader: 'Butikslager',
   stores: [
     { id: '1', name: 'Arninge', city: 'Täby', region: 'Stockholm', url: 'https://x/1', status: 'inStock', label: 'I lager' },
-    { id: '2', name: 'Skövde', city: 'Skövde', region: 'Väst', url: 'https://x/2', status: 'onlyOnline', label: 'Säljs endast online' },
+    { id: '2', name: 'Skövde', city: 'Skövde', region: 'Väst', url: 'https://x/2', status: 'limitedStock', label: 'Fåtal i lager' },
+    { id: '3', name: 'Nacka', city: 'Nacka', region: 'Stockholm', url: 'https://x/3', status: 'onlyOnline', label: 'Säljs endast online' },
+    { id: '4', name: 'Partille', city: 'Partille', region: 'Göteborg', url: 'https://x/4', status: 'outOfStock', label: 'Slut i lager' },
   ],
   fetchedAt: '2026-09-23T10:00:00.000Z',
   ...overrides,
@@ -38,7 +40,43 @@ describe('StockPanel', () => {
     expect(online?.textContent).toContain('I lager');
 
     expect(screen.getByText('Butikslager')).toBeTruthy();
-    expect(screen.getByText('Säljs endast online')).toBeTruthy();
+  });
+
+  /** A 61-row list is unreadable when most rows say the product isn't there. */
+  it('lists only stores that hold the product, and counts only those', async () => {
+    mockStock(stockJson({ stock: stock() }));
+    render(<StockPanel productUrl={URL_PATH} />);
+
+    expect(await screen.findByText('Arninge')).toBeTruthy();   // inStock
+    expect(screen.getByText('Skövde')).toBeTruthy();           // limitedStock counts as stock
+    expect(screen.queryByText('Nacka')).toBeNull();            // onlyOnline
+    expect(screen.queryByText('Partille')).toBeNull();         // outOfStock
+    expect(screen.getByText('(2)')).toBeTruthy();
+  });
+
+  it('drops a region entirely when none of its stores hold the product', async () => {
+    mockStock(stockJson({ stock: stock() }));
+    render(<StockPanel productUrl={URL_PATH} />);
+
+    await screen.findByText('Arninge');
+    expect(screen.getByText('Stockholm')).toBeTruthy();  // still has Arninge
+    expect(screen.queryByText('Göteborg')).toBeNull();   // only had Partille
+  });
+
+  it('says so when no store holds the product', async () => {
+    mockStock(
+      stockJson({
+        stock: stock({
+          stores: [
+            { id: '9', name: 'Ingenstans', city: 'X', region: 'Y', url: 'https://x/9', status: 'outOfStock', label: 'Slut i lager' },
+          ],
+        }),
+      }),
+    );
+    render(<StockPanel productUrl={URL_PATH} />);
+
+    expect(await screen.findByText(/Ingen butik har den i lager/)).toBeTruthy();
+    expect(screen.queryByText('Ingenstans')).toBeNull();
   });
 
   it('groups stores by region', async () => {
@@ -77,7 +115,7 @@ describe('StockPanel', () => {
     mockStock(
       stockJson({
         stock: stock({
-          stores: [{ id: '3', name: 'Nyköping', city: 'Nyköping', region: 'Öst', url: 'https://x/3', status: 'comingSoon' as never, label: 'Kommer snart' }],
+          stores: [{ id: '3', name: 'Nyköping', city: 'Nyköping', region: 'Öst', url: 'https://x/3', status: 'inStock', label: 'Kommer snart' }],
         }),
       }),
     );
