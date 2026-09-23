@@ -3,6 +3,8 @@
 A local, browsable index of every plant in Blomsterlandet's *Trädgårdsrea* campaign,
 filterable and sortable by specification — the thing the source site doesn't let you do.
 
+**Live:** <https://snuffish.github.io/blomsterlandet-spec-browser/>
+
 **1 739 products · 2 419 variants · 8 campaign categories**
 
 ## Why it exists
@@ -53,7 +55,7 @@ The whole chain serializes to the URL in order, so a pipeline is shareable.
 ## Commands
 
 | Command | What it does |
-|---|---|
+| --- | --- |
 | `npm run harvest` | Build the dataset. Raw HTML is cached, so re-runs are seconds. |
 | `npm run harvest:fresh` | Bypass the cache and refetch everything from the site. |
 | `npm run dev` | Dev server with HMR. |
