@@ -69,16 +69,13 @@ export function StockPanel({ productUrl, selectedStores }: Props) {
 }
 
 /**
- * Two modes, deliberately different:
- *
- * - Stores picked → show exactly those, whatever their status. You chose them because you
- *   care about them, so "Slut i lager" is an answer, not noise worth hiding.
- * - Nothing picked → fall back to every store that actually holds the product, because a
- *   61-row list where most rows say "not here" is unreadable.
+ * Only show stores that actually hold the product in stock (`inStock` or `limitedStock`).
+ * If specific stores are picked in the filter, show only those of them that have it in stock.
  */
 function visibleStores(stock: LiveStock, selectedStores: string[]): StoreStock[] {
-  if (selectedStores.length === 0) return stocked(stock.stores);
-  return stock.stores.filter((store) => selectedStores.includes(store.id));
+  const inStock = stocked(stock.stores);
+  if (selectedStores.length === 0) return inStock;
+  return inStock.filter((store) => selectedStores.includes(store.id));
 }
 
 function StockReady({ stock, selectedStores }: { stock: LiveStock; selectedStores: string[] }) {
@@ -96,16 +93,14 @@ function StockReady({ stock, selectedStores }: { stock: LiveStock; selectedStore
       {available.length === 0 ? (
         <p className="stock-pending">
           {following
-            ? 'Produkten säljs inte i de butiker du valt.'
+            ? 'Finns inte i lager i de butiker du valt.'
             : 'Ingen butik har den i lager just nu.'}
         </p>
       ) : (
         <details className="stock-stores">
           <summary>
             {stock.storesHeader || 'Butikslager'}{' '}
-            <span className="stock-count">
-              ({available.length}{following ? ' valda' : ''})
-            </span>
+            <span className="stock-count">({available.length})</span>
           </summary>
           {byRegion(available).map(([region, stores]) => (
             <div key={region} className="stock-region">

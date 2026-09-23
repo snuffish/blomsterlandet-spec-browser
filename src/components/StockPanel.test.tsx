@@ -139,30 +139,25 @@ describe('StockPanel', () => {
   });
 
   describe('with stores the user follows', () => {
-    it('shows exactly those stores, including ones that are out of stock', async () => {
+    it('shows only followed stores that are in stock and hides out of stock ones', async () => {
       mockStock(stockJson({ stock: stock() }));
       render(<StockPanel productUrl={URL_PATH} selectedStores={['1', '4']} />);
 
-      expect(await screen.findByText('Arninge')).toBeTruthy();   // inStock
-      expect(screen.getByText('Partille')).toBeTruthy();         // outOfStock, still shown
-      expect(screen.getByText('Slut i lager')).toBeTruthy();
-      expect(screen.queryByText('Skövde')).toBeNull();           // not followed
+      expect(await screen.findByText('Arninge')).toBeTruthy(); // inStock, shown
+      expect(screen.queryByText('Partille')).toBeNull(); // outOfStock, hidden
+      expect(screen.queryByText('Slut i lager')).toBeNull();
+      expect(screen.queryByText('Skövde')).toBeNull(); // inStock but not followed
       expect(screen.queryByText('Nacka')).toBeNull();
+      expect(screen.getByText('(1)')).toBeTruthy();
     });
 
-    it('says so when the product is not sold in any followed store', async () => {
+    it('says so when no followed store has the product in stock', async () => {
       mockStock(stockJson({ stock: stock() }));
-      render(<StockPanel productUrl={URL_PATH} selectedStores={['does-not-exist']} />);
+      render(<StockPanel productUrl={URL_PATH} selectedStores={['4']} />);
 
-      expect(await screen.findByText(/säljs inte i de butiker du valt/i)).toBeTruthy();
-    });
-
-    it('marks the count as a followed-store count', async () => {
-      mockStock(stockJson({ stock: stock() }));
-      render(<StockPanel productUrl={URL_PATH} selectedStores={['1', '4']} />);
-
-      await screen.findByText('Arninge');
-      expect(screen.getByText(/2 valda/)).toBeTruthy();
+      expect(await screen.findByText(/finns inte i lager i de butiker du valt/i)).toBeTruthy();
+      expect(screen.queryByText('Butikslager')).toBeNull();
+      expect(screen.queryByText('Partille')).toBeNull();
     });
   });
 });

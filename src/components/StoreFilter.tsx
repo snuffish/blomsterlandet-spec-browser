@@ -46,7 +46,7 @@ export function StoreFilter({ stores, selected, onToggle, onClear }: Props) {
       <p className="store-hint">
         {selected.length === 0
           ? 'Inga valda — lagerstatus visar alla butiker som har varan.'
-          : 'Lagerstatus visar dessa butiker, oavsett om varan finns eller inte.'}
+          : 'Lagerstatus visar endast dessa butiker när varan finns i lager.'}
       </p>
 
       {byRegion.map(([region, group]) => (
