@@ -5,6 +5,8 @@ import { useStock } from '~/hooks/useStock';
 interface Props {
   /** The product's path on blomsterlandet.se; `null` while nothing is selected. */
   productUrl: string | null;
+  /** Store IDs the user follows. Empty falls back to "every store that has it in stock". */
+  selectedStores: string[];
 }
 
 /**
@@ -34,7 +36,7 @@ function byRegion(stores: StoreStock[]): Array<[string, StoreStock[]]> {
   return [...groups].sort(([a], [b]) => a.localeCompare(b, 'sv'));
 }
 
-export function StockPanel({ productUrl }: Props) {
+export function StockPanel({ productUrl, selectedStores }: Props) {
   const state = useStock(productUrl);
 
   // No bridge configured: the feature is simply absent, exactly as before it existed.
@@ -58,15 +60,30 @@ export function StockPanel({ productUrl }: Props) {
         </p>
       )}
 
-      {state.status === 'ready' && <StockReady stock={state.stock} />}
+      {state.status === 'ready' && (
+        <StockReady stock={state.stock} selectedStores={selectedStores} />
+      )}
 
     </section>
   );
 }
 
-function StockReady({ stock }: { stock: LiveStock }) {
-  // Only shelves that actually hold the product; everything else is noise on a 61-row list.
-  const available = stocked(stock.stores);
+/**
+ * Two modes, deliberately different:
+ *
+ * - Stores picked → show exactly those, whatever their status. You chose them because you
+ *   care about them, so "Slut i lager" is an answer, not noise worth hiding.
+ * - Nothing picked → fall back to every store that actually holds the product, because a
+ *   61-row list where most rows say "not here" is unreadable.
+ */
+function visibleStores(stock: LiveStock, selectedStores: string[]): StoreStock[] {
+  if (selectedStores.length === 0) return stocked(stock.stores);
+  return stock.stores.filter((store) => selectedStores.includes(store.id));
+}
+
+function StockReady({ stock, selectedStores }: { stock: LiveStock; selectedStores: string[] }) {
+  const following = selectedStores.length > 0;
+  const available = visibleStores(stock, selectedStores);
 
   return (
     <>
@@ -77,12 +94,18 @@ function StockReady({ stock }: { stock: LiveStock }) {
       </p>
 
       {available.length === 0 ? (
-        <p className="stock-pending">Ingen butik har den i lager just nu.</p>
+        <p className="stock-pending">
+          {following
+            ? 'Produkten säljs inte i de butiker du valt.'
+            : 'Ingen butik har den i lager just nu.'}
+        </p>
       ) : (
         <details className="stock-stores">
           <summary>
             {stock.storesHeader || 'Butikslager'}{' '}
-            <span className="stock-count">({available.length})</span>
+            <span className="stock-count">
+              ({available.length}{following ? ' valda' : ''})
+            </span>
           </summary>
           {byRegion(available).map(([region, stores]) => (
             <div key={region} className="stock-region">

@@ -9,9 +9,11 @@ const SITE = 'https://www.blomsterlandet.se';
 interface Props {
   product: Product;
   onClose: () => void;
+  /** Store IDs the user follows; empty means "every store that has it". */
+  selectedStores: string[];
 }
 
-export function ProductDetail({ product, onClose }: Props) {
+export function ProductDetail({ product, onClose, selectedStores }: Props) {
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -48,7 +50,7 @@ export function ProductDetail({ product, onClose }: Props) {
           </div>
         </div>
 
-        <StockPanel productUrl={product.url} />
+        <StockPanel productUrl={product.url} selectedStores={selectedStores} />
 
         {Object.keys(product.dims).length > 0 && (
           <section>

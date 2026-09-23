@@ -65,6 +65,7 @@ export interface Dataset {
   products: Product[];
   facets: FacetCatalogue;
   meta: HarvestMeta;
+  stores: Store[];
 }
 
 /* ── Live stock ────────────────────────────────────────────────────────────────
@@ -85,6 +86,18 @@ export interface StoreStock {
   status: InventoryStatus;
   /** Upstream's own Swedish wording, rendered verbatim — never re-derived locally. */
   label: string;
+}
+
+/**
+ * One physical store. Reference data, not stock: the 61 shops and their names change rarely,
+ * so the directory is harvested into the static dataset while the stock values stay live.
+ */
+export interface Store {
+  id: string;
+  name: string;
+  city: string;
+  region: string;
+  url: string;
 }
 
 export interface LiveStock {

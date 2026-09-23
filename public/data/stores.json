@@ -1,0 +1,429 @@
+[
+  {
+    "id": "30062",
+    "name": "Arninge",
+    "city": "Täby",
+    "region": "Stockholm",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/stockholm-arninge/"
+  },
+  {
+    "id": "30021",
+    "name": "Backaplan",
+    "city": "Göteborg",
+    "region": "Göteborg",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/backaplan/"
+  },
+  {
+    "id": "30033",
+    "name": "Borlänge",
+    "city": "Borlänge",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/borlange/"
+  },
+  {
+    "id": "30055",
+    "name": "Borås",
+    "city": "Borås",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/boras/"
+  },
+  {
+    "id": "30090",
+    "name": "Bromma",
+    "city": "Bromma",
+    "region": "Stockholm",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/stockholm-bromma/"
+  },
+  {
+    "id": "30040",
+    "name": "Enköping",
+    "city": "Enköping",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/enkoping/"
+  },
+  {
+    "id": "30039",
+    "name": "Eskilstuna",
+    "city": "Eskilstuna",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/eskilstuna/"
+  },
+  {
+    "id": "30053",
+    "name": "Falkenberg",
+    "city": "Falkenberg",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/falkenberg/"
+  },
+  {
+    "id": "30032",
+    "name": "Gävle",
+    "city": "Gävle",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/gavle/"
+  },
+  {
+    "id": "30045",
+    "name": "Halmstad",
+    "city": "Halmstad",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/halmstad/"
+  },
+  {
+    "id": "30095",
+    "name": "Haninge",
+    "city": "Haninge",
+    "region": "Stockholm",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/stockholm-haninge/"
+  },
+  {
+    "id": "30096",
+    "name": "Häggvik",
+    "city": "Sollentuna",
+    "region": "Stockholm",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/stockholm-haggvik/"
+  },
+  {
+    "id": "30044",
+    "name": "Hässleholm",
+    "city": "Hässleholm",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/hassleholm/"
+  },
+  {
+    "id": "30050",
+    "name": "Jönköping",
+    "city": "Jönköping",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/jonkoping/"
+  },
+  {
+    "id": "30047",
+    "name": "Kalmar",
+    "city": "Kalmar",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/kalmar/"
+  },
+  {
+    "id": "30043",
+    "name": "Karlskrona",
+    "city": "Karlskrona",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/karlskrona/"
+  },
+  {
+    "id": "30038",
+    "name": "Karlstad Rud",
+    "city": "Karlstad",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/karlstad-rud/"
+  },
+  {
+    "id": "30060",
+    "name": "Karlstad Våxnäs",
+    "city": "Karlstad",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/karlstad-vaxnas-kalenius/"
+  },
+  {
+    "id": "30022",
+    "name": "Kungsbacka",
+    "city": "Kungsbacka",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/kungsbacka/"
+  },
+  {
+    "id": "30066",
+    "name": "Landskrona",
+    "city": "Landskrona",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/landskrona/"
+  },
+  {
+    "id": "30092",
+    "name": "Lidingö",
+    "city": "Lidingö",
+    "region": "Stockholm",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/stockholm-lidingo/"
+  },
+  {
+    "id": "30064",
+    "name": "Lidköping/Lidens handelsträdgård",
+    "city": "Lidköping",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/lidkopinglidens-handelstradgard/"
+  },
+  {
+    "id": "30018",
+    "name": "Linköping",
+    "city": "Linköping",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/linkoping/"
+  },
+  {
+    "id": "30061",
+    "name": "Lomma",
+    "city": "Lomma",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/lomma/"
+  },
+  {
+    "id": "30012",
+    "name": "Luleå",
+    "city": "Luleå",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/lulea/"
+  },
+  {
+    "id": "30016",
+    "name": "Lund",
+    "city": "Lund",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/lund/"
+  },
+  {
+    "id": "30057",
+    "name": "Malmö",
+    "city": "Malmö",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/malmo/"
+  },
+  {
+    "id": "30068",
+    "name": "Mora",
+    "city": "Mora",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/mora/"
+  },
+  {
+    "id": "30067",
+    "name": "Motala",
+    "city": "Motala",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/motala/"
+  },
+  {
+    "id": "30091",
+    "name": "Nacka",
+    "city": "Nacka",
+    "region": "Stockholm",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/stockholm-nacka/"
+  },
+  {
+    "id": "30014",
+    "name": "Norrköping Ingelsta",
+    "city": "Norrköping",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/norrkoping-ingelsta/"
+  },
+  {
+    "id": "30015",
+    "name": "Norrköping Risängen",
+    "city": "Norrköping",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/norrkoping-risangen/"
+  },
+  {
+    "id": "30030",
+    "name": "Norrtälje",
+    "city": "Norrtälje",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/norrtalje/"
+  },
+  {
+    "id": "30017",
+    "name": "Nyköping",
+    "city": "Nyköping",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/nykoping/"
+  },
+  {
+    "id": "30020",
+    "name": "Partille",
+    "city": "Partille",
+    "region": "Göteborg",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/partille/"
+  },
+  {
+    "id": "30059",
+    "name": "Rydebäck",
+    "city": "Rydebäck",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/rydeback/"
+  },
+  {
+    "id": "30023",
+    "name": "Sisjön",
+    "city": "Askim",
+    "region": "Göteborg",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/sisjon/"
+  },
+  {
+    "id": "30013",
+    "name": "Skellefteå",
+    "city": "Skellefteå",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/skelleftea-solbacken/"
+  },
+  {
+    "id": "30037",
+    "name": "Skövde",
+    "city": "Skövde",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/skovde/"
+  },
+  {
+    "id": "30034",
+    "name": "Stenungsund",
+    "city": "Stenungsund",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/stenungsund-kullen/"
+  },
+  {
+    "id": "30056",
+    "name": "Strängnäs",
+    "city": "Strängnäs",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/strangnas/"
+  },
+  {
+    "id": "30025",
+    "name": "Strömstad",
+    "city": "Strömstad",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/stromstad/"
+  },
+  {
+    "id": "30029",
+    "name": "Sundsvall",
+    "city": "Sundsbruk",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/sundsvall/"
+  },
+  {
+    "id": "30097",
+    "name": "Södertälje",
+    "city": "Södertälje",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/stockholm-sodertalje/"
+  },
+  {
+    "id": "30024",
+    "name": "Torslanda",
+    "city": "Torslanda",
+    "region": "Göteborg",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/torslanda/"
+  },
+  {
+    "id": "30036",
+    "name": "Trollhättan",
+    "city": "Trollhättan",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/trollhattan/"
+  },
+  {
+    "id": "30093",
+    "name": "Täby",
+    "city": "Täby",
+    "region": "Stockholm",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/stockholm-taby/"
+  },
+  {
+    "id": "30065",
+    "name": "Uddevalla",
+    "city": "Uddevalla",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/uddevalla/"
+  },
+  {
+    "id": "30010",
+    "name": "Umeå Strömpilen",
+    "city": "Umeå",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/umea-strompilen/"
+  },
+  {
+    "id": "30041",
+    "name": "Uppsala Gränby",
+    "city": "Uppsala",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/uppsala-granby/"
+  },
+  {
+    "id": "30031",
+    "name": "Uppsala Rosendal",
+    "city": "Uppsala",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/uppsala-rosendal/"
+  },
+  {
+    "id": "30051",
+    "name": "Varberg",
+    "city": "Varberg",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/varberg/"
+  },
+  {
+    "id": "30098",
+    "name": "Veddesta",
+    "city": "Järfälla",
+    "region": "Stockholm",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/stockholm-veddesta/"
+  },
+  {
+    "id": "30048",
+    "name": "Värnamo",
+    "city": "Värnamo",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/varnamo/"
+  },
+  {
+    "id": "30019",
+    "name": "Västervik",
+    "city": "Västervik",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/vastervik/"
+  },
+  {
+    "id": "30028",
+    "name": "Västerås Erikslund",
+    "city": "Västerås",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/vasteras-erikslund/"
+  },
+  {
+    "id": "30046",
+    "name": "Växjö",
+    "city": "Växjö",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/vaxjo/"
+  },
+  {
+    "id": "30049",
+    "name": "Ängelholm",
+    "city": "Ängelholm",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/angelholm/"
+  },
+  {
+    "id": "30026",
+    "name": "Örebro Marieberg",
+    "city": "Örebro",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/orebro-marieberg/"
+  },
+  {
+    "id": "30027",
+    "name": "Örebro Österplan",
+    "city": "Örebro",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/orebro-osterplan/"
+  },
+  {
+    "id": "30009",
+    "name": "Örnsköldsvik",
+    "city": "Örnsköldsvik",
+    "region": "",
+    "url": "https://www.blomsterlandet.se/hitta-din-butik/ornskoldsvik/"
+  }
+]

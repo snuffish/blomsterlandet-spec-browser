@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
-import type { FacetCatalogue, Product } from '~shared/types';
+import type { FacetCatalogue, Product, Store } from '~shared/types';
 import type { BaseUnit } from '~shared/units';
 import { campaignCounts, facetCounts, type DimFilter, type FilterState } from '~/lib/query';
 import { ChipFilter } from './ChipFilter';
 import { RangeFilter } from './RangeFilter';
+import { StoreFilter } from './StoreFilter';
 
 export const PRIMARY_DIM = 'Förväntad sluthöjd';
 
@@ -22,10 +23,15 @@ interface Props {
   setTag: (name: string, values: string[]) => void;
   setCampaigns: (values: string[]) => void;
   onReset: () => void;
+  stores: Store[];
+  selectedStores: string[];
+  onToggleStore: (id: string) => void;
+  onClearStores: () => void;
 }
 
 export function FilterPanel({
   products, facets, filters, setSearch, setDim, setTag, setCampaigns, onReset,
+  stores, selectedStores, onToggleStore, onClearStores,
 }: Props) {
   const toggleTag = (name: string, value: string): void => {
     const current = filters.tags[name] ?? [];
@@ -113,6 +119,11 @@ export function FilterPanel({
             onToggle={(value) => toggleTag(name, value)}
           />
         ))}
+
+        <StoreFilter
+          stores={stores} selected={selectedStores}
+          onToggle={onToggleStore} onClear={onClearStores}
+        />
       </div>
     </aside>
   );

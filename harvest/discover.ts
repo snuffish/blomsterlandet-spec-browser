@@ -1,4 +1,4 @@
-import { extractPreloadedState, findComponents } from '~shared/extract-state';
+import { extractPreloadedState, findComponents } from '../shared/extract-state';
 import { BASE_URL, fetchText } from './http';
 import type { LinkBlock, ProductListResponse } from './upstream';
 

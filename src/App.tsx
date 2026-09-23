@@ -7,6 +7,7 @@ import { ProductCard } from '~/components/ProductCard';
 import { ProductDetail } from '~/components/ProductDetail';
 import { useChain } from '~/hooks/useChain';
 import { useDataset } from '~/hooks/useDataset';
+import { useStorePrefs } from '~/hooks/useStorePrefs';
 import { chainToFilterState, runChain } from '~/lib/chain';
 import { formatDate } from '~/lib/format';
 
@@ -15,6 +16,7 @@ const PAGE_SIZE = 60;
 export default function App() {
   const { state: dataset, reload } = useDataset();
   const chain = useChain();
+  const storePrefs = useStorePrefs();
   const [selected, setSelected] = useState<Product | null>(null);
   const [limit, setLimit] = useState(PAGE_SIZE);
 
@@ -66,6 +68,10 @@ export default function App() {
           chain.reset();
           setLimit(PAGE_SIZE);
         }}
+        stores={dataset.data.stores}
+        selectedStores={storePrefs.selected}
+        onToggleStore={storePrefs.toggle}
+        onClearStores={storePrefs.clear}
       />
 
       <main className="results">
@@ -121,7 +127,11 @@ export default function App() {
         {meta.promotionNotice && <p className="notice">⚠ {meta.promotionNotice} — priser kan vara inaktuella.</p>}
       </footer>
 
-      {selected && <ProductDetail product={selected} onClose={() => setSelected(null)} />}
+      {selected && <ProductDetail
+          product={selected}
+          onClose={() => setSelected(null)}
+          selectedStores={storePrefs.selected}
+        />}
     </div>
   );
 }

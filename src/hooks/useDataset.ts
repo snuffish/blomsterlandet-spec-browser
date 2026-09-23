@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { Dataset, FacetCatalogue, HarvestMeta, Product } from '~shared/types';
+import type { Dataset, FacetCatalogue, HarvestMeta, Product, Store } from '~shared/types';
 
 type State =
   | { status: 'loading' }
@@ -23,9 +23,10 @@ export function useDataset(): { state: State; reload: () => void } {
       load<Product[]>('data/products.json', nonce),
       load<FacetCatalogue>('data/facets.json', nonce),
       load<HarvestMeta>('data/meta.json', nonce),
+      load<Store[]>('data/stores.json', nonce),
     ])
-      .then(([products, facets, meta]) => {
-        if (!cancelled) setState({ status: 'ready', data: { products, facets, meta } });
+      .then(([products, facets, meta, stores]) => {
+        if (!cancelled) setState({ status: 'ready', data: { products, facets, meta, stores } });
       })
       .catch((error: Error) => {
         if (!cancelled) {

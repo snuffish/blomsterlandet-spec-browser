@@ -7,6 +7,7 @@ import { discoverCampaigns } from './discover';
 import { fetchCampaignIndex, type IndexedCard } from './fetch-index';
 import { fetchProductDetail } from './fetch-pdp';
 import { mapPool } from './http';
+import { buildStores } from './stores';
 import { PRIMARY_DIMENSION, validate } from './validate';
 
 const OUT_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'data');
@@ -83,6 +84,8 @@ async function main(): Promise<void> {
 
   const labels = new Map(campaigns.map((c) => [c.slug, c.label]));
   const facets = buildFacets(products, labels);
+  // Reference data for the sidebar's store picker; the stock values themselves stay live.
+  const stores = buildStores(details);
   const meta: HarvestMeta = {
     harvestedAt: new Date().toISOString(),
     productCount: products.length,
@@ -98,11 +101,13 @@ async function main(): Promise<void> {
     writeFile(join(OUT_DIR, 'products.json'), JSON.stringify(products), 'utf8'),
     writeFile(join(OUT_DIR, 'facets.json'), JSON.stringify(facets), 'utf8'),
     writeFile(join(OUT_DIR, 'meta.json'), JSON.stringify(meta, null, 2), 'utf8'),
+    writeFile(join(OUT_DIR, 'stores.json'), JSON.stringify(stores, null, 2), 'utf8'),
   ]);
 
   log(`\n✅ ${products.length} products, ${meta.variantCount} variants`);
   log(`   "${PRIMARY_DIMENSION}" coverage: ${pct(coverage[PRIMARY_DIMENSION] ?? 0)}`);
   log(`   Facets: ${Object.keys(facets.dims).length} dimensional, ${Object.keys(facets.tags).length} categorical`);
+  log(`   Stores: ${stores.length}`);
   log(`   Detail fetch failures: ${failures}`);
   log(`   Elapsed: ${((Date.now() - started) / 1000).toFixed(1)}s\n`);
 }
