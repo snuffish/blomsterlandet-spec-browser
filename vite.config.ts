@@ -62,6 +62,10 @@ function harvestEndpoint(): Plugin {
 }
 
 export default defineConfig({
+  // Served from a repository sub-path on GitHub Pages, so assets resolve relative to
+  // index.html rather than the domain root. Keeps the build portable: sub-path, preview
+  // and a future root domain all work without the repository name in source.
+  base: './',
   plugins: [react(), harvestEndpoint()],
   // The harvest rewrites these mid-session; the UI reloads them itself rather than
   // letting the watcher blow the page away while the run is still reporting progress.

@@ -1,0 +1,55 @@
+{
+  "harvestedAt": "2026-09-23T07:13:49.873Z",
+  "productCount": 1760,
+  "variantCount": 2494,
+  "campaigns": [
+    {
+      "slug": "tradgardsrea",
+      "label": "Perenner",
+      "count": 1129
+    },
+    {
+      "slug": "prydnadsbuskar",
+      "label": "Prydnadsbuskar",
+      "count": 148
+    },
+    {
+      "slug": "hackvaxter",
+      "label": "Häckväxter",
+      "count": 11
+    },
+    {
+      "slug": "prydnadstrad",
+      "label": "Prydnadsträd",
+      "count": 48
+    },
+    {
+      "slug": "frukttrad",
+      "label": "Fruktträd",
+      "count": 124
+    },
+    {
+      "slug": "barbuskar-tradgardsrea",
+      "label": "Bärbuskar",
+      "count": 62
+    },
+    {
+      "slug": "rosor",
+      "label": "Rosor",
+      "count": 228
+    },
+    {
+      "slug": "ovriga-vaxter",
+      "label": "Övriga växter",
+      "count": 11
+    }
+  ],
+  "coverage": {
+    "Leveranshöjd": 0.3488636363636364,
+    "Förväntad sluthöjd": 0.9761363636363637,
+    "Bredd": 0.10397727272727272,
+    "Odlingszon": 0.35625,
+    "Stamhöjd": 0.017045454545454544
+  },
+  "promotionNotice": "50% Trädgårdsrea online t.o.m 11/10"
+}
